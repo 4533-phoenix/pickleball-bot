@@ -16,7 +16,7 @@ public final class DriveCommands {
     public static RunCommand getDefaultDriveCommand() {
         // Returns a run command that runs the teleop drive method.
         return new RunCommand(
-            () -> Drive.getInstance().teleopDrive(), 
+            () -> Drive.getInstance().teleopDrive(),
             Drive.getInstance()
         );
     }

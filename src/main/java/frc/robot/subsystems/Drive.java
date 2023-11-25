@@ -122,7 +122,7 @@ public final class Drive extends SubsystemBase {
          * rather than the motor shaft.
          */
         leftEncoder.setPositionConversionFactor(DriveConstants.WHEEL_CIRCUMFERENCE / DriveConstants.GEAR_REDUCTION);
-        rightEncoder.setPositionConversionFactor(DriveConstants.WHEEL_CIRCUMFERENCE/ DriveConstants.GEAR_REDUCTION);
+        rightEncoder.setPositionConversionFactor(DriveConstants.WHEEL_CIRCUMFERENCE / DriveConstants.GEAR_REDUCTION);
 
         /*
          * Sets the left and right encoders to convert velocity from motor rpm 
@@ -176,7 +176,7 @@ public final class Drive extends SubsystemBase {
         /*
          * Sets the voltage of the left and right leader motors to the sum
          * of the voltage calculated by the left and right feedforward
-         * and pid controllers.
+         * and PID controllers.
          */
         leftLeader.setVoltage(leftFeedforward.calculate(leftVelocity) + leftPID.calculate(currentLeftVelocity, leftVelocity));
         rightLeader.setVoltage(rightFeedforward.calculate(rightVelocity) + rightPID.calculate(currentRightVelocity, rightVelocity));
@@ -221,7 +221,7 @@ public final class Drive extends SubsystemBase {
      * drive position estimator.
      */
     public Pose2d getEstimatedPose() {
-        return poseEstimator.getEstimatedPosition();
+        return poseEstimator != null ? poseEstimator.getEstimatedPosition() : new Pose2d();
     }
 
     /**
@@ -237,9 +237,12 @@ public final class Drive extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        /**
-         * Updates the drive position estimator.
+        /*
+         * Updates the drive position estimator if it 
+         * has been created.
          */
-        poseEstimator.update(getAngle(), getLeftDistance(), getRightDistance());
+        if (poseEstimator != null) {
+            poseEstimator.update(getAngle(), getLeftDistance(), getRightDistance());
+        }
     }
 }
