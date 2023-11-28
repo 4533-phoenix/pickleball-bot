@@ -54,6 +54,7 @@ public final class RobotContainer {
 
         // Registers the subsystems with the command scheduler.
         commandScheduler.registerSubsystem(Drive.getInstance());
+        commandScheduler.registerSubsystem(new Feeder());
         
         // Sets the subsystems' default commands.
         Drive.getInstance().setDefaultCommand(DriveCommands.getDefaultDriveCommand());
