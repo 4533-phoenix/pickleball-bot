@@ -52,6 +52,9 @@ public final class Robot extends TimedRobot {
     // Registers the subsystems with the command scheduler.
     RobotContainer.registerSubsystems();
 
+    // Registers the button commands with their respective buttons.
+    RobotContainer.registerButtons();
+
     // Sets the options and default option for the autonomous chooser.
     autoChooser.setDefaultOption("Default Auto", "Default Auto");
     autoChooser.addOption("First Auto", "First Auto");

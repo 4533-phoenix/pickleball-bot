@@ -87,6 +87,11 @@ public final class Drive extends SubsystemBase {
     private DifferentialDrivePoseEstimator poseEstimator = null;
 
     /**
+     * The state of slow drive mode.
+     */
+    private boolean willDriveSlow = false;
+
+    /**
      * Gets the drive subsystem instance.
      * 
      * @return The drive subsystem instance. 
@@ -159,12 +164,20 @@ public final class Drive extends SubsystemBase {
      */
     public void teleopDrive() {
         /*
+         * Factor to multiply the left and right velocities by. If slow
+         * drive mode is on, it will half them; otherwise, it will do
+         * nothing to them.
+         */
+        double velocityFactor = willDriveSlow ? 0.5 : 1.0;
+
+        /*
          * Sets the left and right velocities of the left and right sides of the
          * robot to be a fraction of the max velocity according to the 
-         * -1.0 to 1.0 factor of the left and right controller sticks.
+         * -1.0 to 1.0 factor of the left and right controller sticks, as well
+         * as the velocity factor.
          */
-        double leftVelocity = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VELOCITY;
-        double rightVelocity = RobotContainer.getController().getRightY() * DriveConstants.MAX_VELOCITY;
+        double leftVelocity = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VELOCITY * velocityFactor;
+        double rightVelocity = RobotContainer.getController().getRightY() * DriveConstants.MAX_VELOCITY * velocityFactor;
 
         /*
          * Gets the current left and right velocities from the left and 
@@ -180,6 +193,13 @@ public final class Drive extends SubsystemBase {
          */
         leftLeader.setVoltage(leftFeedforward.calculate(leftVelocity) + leftPID.calculate(currentLeftVelocity, leftVelocity));
         rightLeader.setVoltage(rightFeedforward.calculate(rightVelocity) + rightPID.calculate(currentRightVelocity, rightVelocity));
+    }
+
+    /**
+     * Toggles slow drive mode.
+     */
+    public void toggleSlowDriveMode() {
+        willDriveSlow = !willDriveSlow;
     }
 
     /**

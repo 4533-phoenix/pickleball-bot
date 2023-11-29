@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.FeederConstants;
 
 /*
             The feeder
@@ -24,6 +25,8 @@ import frc.robot.RobotContainer;
     position and all balls drop into the shooter.
 */
 public final class Feeder extends SubsystemBase {
+    private static Feeder feeder = null;
+
     // Angle (in degrees) for the closed and open positions of the servos
     private final double closedAngle = 90.0;
     private final double openAngle = 180.0;
@@ -32,20 +35,29 @@ public final class Feeder extends SubsystemBase {
     private final int dropDelay = 1000;
     
     // Initialize the servo objects
-    private final Servo preliminaryServo = new Servo(/* channel */ 0);
-    private final Servo firingServo = new Servo(0);
+    private final Servo preliminaryServo = new Servo(FeederConstants.PRELIMINARY_SERVO_ID);
+    private final Servo firingServo = new Servo(FeederConstants.FIRING_SERVO_ID);
 
-    public Feeder()
+    public static Feeder getInstance() 
+    {
+        if (feeder == null) 
+        {
+            feeder = new Feeder();
+        }
+
+        return feeder;
+    }
+
+    private Feeder()
     {
     }
 
-    public void teleopDrive()
+    public void normalFire()
     {
         boolean feedBall = RobotContainer.getController().getAButton();
 
         if (feedBall)
         {
-            // XXX: I believe this is blocking, but I don't know how else to handle it
             this.setPreliminary(true);
             Timer.delay(dropDelay * 0.001);
             this.setPreliminary(false);

@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -54,10 +55,19 @@ public final class RobotContainer {
 
         // Registers the subsystems with the command scheduler.
         commandScheduler.registerSubsystem(Drive.getInstance());
-        commandScheduler.registerSubsystem(new Feeder());
+        commandScheduler.registerSubsystem(Feeder.getInstance());
         
         // Sets the subsystems' default commands.
         Drive.getInstance().setDefaultCommand(DriveCommands.getDefaultDriveCommand());
+    }
+
+    /**
+     * Registers the button commands with their respective buttons.
+     */
+    public static void registerButtons() {
+        // Registers the toggle slow drive mode command to the A button.
+        JoystickButton toggleSlowDriveMode = new JoystickButton(controller, ControllerConstants.BUTTON_A);
+        toggleSlowDriveMode.onTrue(DriveCommands.getToggleSlowDriveModeCommand());
     }
     
     /**
