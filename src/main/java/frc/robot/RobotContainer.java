@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.FeederCommands;
 
 import java.util.AbstractMap;
 import java.util.Map;
@@ -54,7 +55,7 @@ public final class RobotContainer {
         CommandScheduler commandScheduler = CommandScheduler.getInstance();
 
         // Registers the subsystems with the command scheduler.
-        commandScheduler.registerSubsystem(Drive.getInstance());
+        // commandScheduler.registerSubsystem(Drive.getInstance());
         commandScheduler.registerSubsystem(Feeder.getInstance());
         
         // Sets the subsystems' default commands.
@@ -67,7 +68,11 @@ public final class RobotContainer {
     public static void registerButtons() {
         // Registers the toggle slow drive mode command to the A button.
         JoystickButton toggleSlowDriveMode = new JoystickButton(controller, ControllerConstants.BUTTON_A);
+        JoystickButton normalFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_BACK);
+        JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
         toggleSlowDriveMode.onTrue(DriveCommands.getToggleSlowDriveModeCommand());
+        normalFireBtn.onTrue(FeederCommands.normalFireCommand());
+        rapidFireBtn.onTrue(FeederCommands.rapidFireCommand());
     }
     
     /**

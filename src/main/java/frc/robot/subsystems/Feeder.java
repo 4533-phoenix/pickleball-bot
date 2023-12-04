@@ -28,8 +28,9 @@ public final class Feeder extends SubsystemBase {
     private static Feeder feeder = null;
 
     // Angle (in degrees) for the closed and open positions of the servos
-    private final double closedAngle = 90.0;
-    private final double openAngle = 180.0;
+    private final double closedAngle = 180.0;
+    private final double semiClosedAngle = 145.0;
+    private final double openAngle = 110.0;
 
     // Delay (in ms) between open/close operations
     private final int dropDelay = 1000;
@@ -38,7 +39,7 @@ public final class Feeder extends SubsystemBase {
     private final Servo preliminaryServo = new Servo(FeederConstants.PRELIMINARY_SERVO_ID);
     private final Servo firingServo = new Servo(FeederConstants.FIRING_SERVO_ID);
 
-    public static Feeder getInstance() 
+    public static Feeder getInstance()
     {
         if (feeder == null) 
         {
@@ -54,17 +55,12 @@ public final class Feeder extends SubsystemBase {
 
     public void normalFire()
     {
-        boolean feedBall = RobotContainer.getController().getAButton();
-
-        if (feedBall)
-        {
-            this.setPreliminary(true);
-            Timer.delay(dropDelay * 0.001);
-            this.setPreliminary(false);
-            this.setFiring(true);
-            Timer.delay(dropDelay * 0.001);
-            this.setFiring(false);
-        }
+        this.setPreliminary(true);
+        Timer.delay(dropDelay * 0.001);
+        this.setPreliminary(false);
+        this.setFiring(true);
+        Timer.delay(dropDelay * 0.001);
+        this.setFiring(false);
     }
 
     // Rapid fire!!1!1!
@@ -81,7 +77,7 @@ public final class Feeder extends SubsystemBase {
         if (open)
             this.preliminaryServo.setAngle(this.openAngle);
         else
-            this.preliminaryServo.setAngle(this.closedAngle);
+            this.preliminaryServo.setAngle(this.semiClosedAngle);
     }
 
     // Open/close the firing servo
