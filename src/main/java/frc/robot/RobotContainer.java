@@ -4,6 +4,7 @@ import frc.robot.subsystems.*;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterCommands;
+import frc.robot.commands.FeederCommands;
 
 import java.util.AbstractMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public final class RobotContainer {
         CommandScheduler commandScheduler = CommandScheduler.getInstance();
 
         // Registers the subsystems with the command scheduler.
-        commandScheduler.registerSubsystem(Drive.getInstance());
+        // commandScheduler.registerSubsystem(Drive.getInstance());
         commandScheduler.registerSubsystem(Feeder.getInstance());
         commandScheduler.registerSubsystem(Shooter.getInstance());
         
@@ -70,6 +71,8 @@ public final class RobotContainer {
     public static void registerButtons() {
         // Registers the toggle slow drive mode command to the A button.
         JoystickButton toggleSlowDriveMode = new JoystickButton(controller, ControllerConstants.BUTTON_A);
+        JoystickButton normalFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_BACK);
+        JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
         toggleSlowDriveMode.onTrue(DriveCommands.getToggleSlowDriveModeCommand());
 
         Trigger runFlywheelForward = new Trigger(() -> { return controller.getRightTriggerAxis() > 0.0; });
@@ -80,6 +83,8 @@ public final class RobotContainer {
 
         JoystickButton stopFlywheel = new JoystickButton(controller, ControllerConstants.BUTTON_B);
         stopFlywheel.onFalse(ShooterCommands.stopFlywheelCommand());
+        normalFireBtn.onTrue(FeederCommands.normalFireCommand());
+        rapidFireBtn.onTrue(FeederCommands.rapidFireCommand());
     }
     
     /**
