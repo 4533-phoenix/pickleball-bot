@@ -77,12 +77,12 @@ public final class RobotContainer {
 
         Trigger runFlywheelForward = new Trigger(() -> { return controller.getRightTriggerAxis() > 0.0; });
         runFlywheelForward.whileTrue(ShooterCommands.runFlywheelForwardCommand());
+        runFlywheelForward.onFalse(ShooterCommands.stopFlywheelCommand());
 
         Trigger runFlywheelBackward = new Trigger(() -> { return controller.getLeftTriggerAxis() > 0.0; });
         runFlywheelBackward.whileTrue(ShooterCommands.runFlywheelBackwardCommand());
+        runFlywheelBackward.onFalse(ShooterCommands.stopFlywheelCommand());
 
-        JoystickButton stopFlywheel = new JoystickButton(controller, ControllerConstants.BUTTON_B);
-        stopFlywheel.onFalse(ShooterCommands.stopFlywheelCommand());
         normalFireBtn.onTrue(FeederCommands.normalFireCommand());
         rapidFireBtn.onTrue(FeederCommands.rapidFireCommand());
     }
