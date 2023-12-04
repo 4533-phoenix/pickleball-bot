@@ -75,11 +75,11 @@ public final class RobotContainer {
         JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
         toggleSlowDriveMode.onTrue(DriveCommands.getToggleSlowDriveModeCommand());
 
-        Trigger runFlywheelForward = new Trigger(() -> { return controller.getRightTriggerAxis() > 0.0; });
+        JoystickButton runFlywheelForward = new JoystickButton(controller, ControllerConstants.BUTTON_B);
         runFlywheelForward.whileTrue(ShooterCommands.runFlywheelForwardCommand());
         runFlywheelForward.onFalse(ShooterCommands.stopFlywheelCommand());
 
-        Trigger runFlywheelBackward = new Trigger(() -> { return controller.getLeftTriggerAxis() > 0.0; });
+        JoystickButton runFlywheelBackward = new JoystickButton(controller, ControllerConstants.BUTTON_Y);
         runFlywheelBackward.whileTrue(ShooterCommands.runFlywheelBackwardCommand());
         runFlywheelBackward.onFalse(ShooterCommands.stopFlywheelCommand());
 
