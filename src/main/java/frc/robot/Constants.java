@@ -11,10 +11,10 @@ public final class Constants {
      */
     public static final class DriveConstants {
         // Motor ids.
-        public static final int LEFT_LEADER_ID = 0;
-        public static final int RIGHT_LEADER_ID = 1;
-        public static final int LEFT_FOLLOWER_ID = 2;
-        public static final int RIGHT_FOLLOWER_ID = 3;
+        public static final int LEFT_LEADER_ID = 1;
+        public static final int RIGHT_LEADER_ID = 2;
+        public static final int LEFT_FOLLOWER_ID = 3;
+        public static final int RIGHT_FOLLOWER_ID = 4;
 
         // Feedforward constants.
         public static final double KS = 1.0;
@@ -40,6 +40,21 @@ public final class Constants {
         // Servo ids.
         public static final int PRELIMINARY_SERVO_ID = 0;
         public static final int FIRING_SERVO_ID = 1;
+    }
+
+    /**
+     * Contains the shooter constants.
+     */
+    public static final class ShooterConstants {
+        // Motor ids.
+        public static final int FLYWHEEL_MOTOR_ID = 5;
+
+        // Feedforward constants.
+        public static final double KS = -0.00024616;
+        public static final double KV = 0.12589 / 60.0; // kv is in rot/s, so divide by 60s to get from rpm to rot/s
+
+        // Math constants.
+        public static final double FLYWHEEL_VELOCITY = 3500.0; // rpm
     }
 
     /**
