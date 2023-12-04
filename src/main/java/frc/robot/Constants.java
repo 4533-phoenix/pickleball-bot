@@ -11,7 +11,7 @@ public final class Constants {
      */
     public static final class DriveConstants {
         // Motor ids.
-        public static final int LEFT_LEADER_ID = 1;
+        public static final int LEFT_LEADER_ID = 5;
         public static final int RIGHT_LEADER_ID = 2;
         public static final int LEFT_FOLLOWER_ID = 3;
         public static final int RIGHT_FOLLOWER_ID = 4;
@@ -47,7 +47,7 @@ public final class Constants {
      */
     public static final class ShooterConstants {
         // Motor ids.
-        public static final int FLYWHEEL_MOTOR_ID = 5;
+        public static final int FLYWHEEL_MOTOR_ID = 1;
 
         // Feedforward constants.
         public static final double KS = -0.00024616;
