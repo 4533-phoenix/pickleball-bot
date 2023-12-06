@@ -37,16 +37,6 @@ public final class Drive extends SubsystemBase {
     private final CANSparkMax rightLeader = new CANSparkMax(DriveConstants.RIGHT_LEADER_ID, MotorType.kBrushless);
 
     /**
-     * The left follower motor, which follows {@link #leftLeader}
-     */
-    private final CANSparkMax leftFollower = new CANSparkMax(DriveConstants.LEFT_FOLLOWER_ID, MotorType.kBrushless);
-
-    /**
-     * The right follower motor. which follows {@link #rightLeader}
-     */
-    private final CANSparkMax rightFollower = new CANSparkMax(DriveConstants.RIGHT_FOLLOWER_ID, MotorType.kBrushless);
-
-    /**
      * The encoder for {@link #leftLeader}.
      */
     private final RelativeEncoder leftEncoder = leftLeader.getEncoder();
@@ -112,13 +102,6 @@ public final class Drive extends SubsystemBase {
      * Constructs the drive subsystem instance.
      */
     private Drive() {
-        /*
-         * Sets the left and right follower motors to follow their respective
-         * leader motors.
-         */
-        leftFollower.follow(leftLeader);
-        rightFollower.follow(rightLeader);
-
         /**
          * Sets the left and right encoders to convert position from motor
          * rotations to distance traveled by the wheel. This involves first

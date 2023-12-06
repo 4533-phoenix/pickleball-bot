@@ -71,19 +71,32 @@ public final class RobotContainer {
     public static void registerButtons() {
         // Registers the toggle slow drive mode command to the A button.
         JoystickButton toggleSlowDriveMode = new JoystickButton(controller, ControllerConstants.BUTTON_A);
-        JoystickButton normalFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_BACK);
-        JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
         toggleSlowDriveMode.onTrue(DriveCommands.getToggleSlowDriveModeCommand());
 
-        JoystickButton runFlywheelForward = new JoystickButton(controller, ControllerConstants.BUTTON_B);
+        /*
+         * Registers the run flywheel forward command to the right trigger.
+         * 
+         * When the trigger is released, the stop flywheel command is run.
+         */
+        Trigger runFlywheelForward = new Trigger(() -> { return controller.getRightTriggerAxis() > 0.0; });
         runFlywheelForward.whileTrue(ShooterCommands.runFlywheelForwardCommand());
         runFlywheelForward.onFalse(ShooterCommands.stopFlywheelCommand());
 
-        JoystickButton runFlywheelBackward = new JoystickButton(controller, ControllerConstants.BUTTON_Y);
+        /*
+         * Registers the run flywheel backward command to the left trigger.
+         * 
+         * When the trigger is released, the stop flywheel command is run.
+         */
+        Trigger runFlywheelBackward = new Trigger(() -> { return controller.getLeftTriggerAxis() > 0.0; });
         runFlywheelBackward.whileTrue(ShooterCommands.runFlywheelBackwardCommand());
         runFlywheelBackward.onFalse(ShooterCommands.stopFlywheelCommand());
 
+        // Registers the normal fire command to the back button.
+        JoystickButton normalFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_BACK);
         normalFireBtn.onTrue(FeederCommands.normalFireCommand());
+
+        // Registers the rapid fire command to the left bumper.
+        JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
         rapidFireBtn.onTrue(FeederCommands.rapidFireCommand());
     }
     

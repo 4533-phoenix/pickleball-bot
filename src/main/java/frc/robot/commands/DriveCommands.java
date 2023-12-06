@@ -22,7 +22,7 @@ public final class DriveCommands {
     }
 
     /**
-     * Gets the toggle slow drive mode command from the 
+     * Gets the toggle slow drive mode command for the 
      * drive subsystem.
      *  
      * @return The toggle slow drive mode command.
