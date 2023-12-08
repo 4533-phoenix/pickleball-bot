@@ -30,7 +30,7 @@ public final class Constants {
         public static final double WHEEL_CIRCUMFERENCE = 0.31919; // m
         public static final double RPM_TO_METERS_PER_SECOND = WHEEL_CIRCUMFERENCE / 60.0;
         public static final double GEAR_REDUCTION = 6.0;
-        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(1.0);
+        public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(0.0254);
     }
 
     /**
