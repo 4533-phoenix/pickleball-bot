@@ -61,6 +61,10 @@ public final class Robot extends TimedRobot {
 
     // Sends the autonomous chooser to SmartDashboard.
     SmartDashboard.putData("Auto Commands", autoChooser);
+
+    SmartDashboard.putNumber("Kp", 0.0);
+    SmartDashboard.putNumber("Ki", 0.0);
+    SmartDashboard.putNumber("Kd", 0.0);
   }
 
   /**
@@ -133,7 +137,14 @@ public final class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    double p = SmartDashboard.getNumber("Kp", 0.0);
+    double i = SmartDashboard.getNumber("Ki", 0.0);
+    double d = SmartDashboard.getNumber("Kd", 0.0);
+
+    Drive.getInstance().getLeftPID().setPID(p, i, d);
+    Drive.getInstance().getRightPID().setPID(p, i, d);
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override

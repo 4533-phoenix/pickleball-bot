@@ -235,6 +235,24 @@ public final class Drive extends SubsystemBase {
     }
 
     /**
+     * Gets the left PID controller.
+     * 
+     * @return The left PID controller.
+     */
+    public PIDController getLeftPID() {
+        return leftPID;
+    }
+
+    /**
+     * Gets the right PID controller.
+     * 
+     * @return The right PID controller.
+     */
+    public PIDController getRightPID() {
+        return rightPID;
+    }
+
+    /**
      * The {@link CommandScheduler} runs this method
      * every 20 ms.
      */
