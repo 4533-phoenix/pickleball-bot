@@ -132,18 +132,20 @@ public final class Robot extends TimedRobot {
      * of teleop. This ensures that the autonomous command
      * stops if it continues running in teleop.
      */
-    CommandScheduler.getInstance().cancel(autoCommand);
+    if (autoCommand != null) {
+      CommandScheduler.getInstance().cancel(autoCommand);
+    }
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double p = SmartDashboard.getNumber("Kp", 0.0);
-    double i = SmartDashboard.getNumber("Ki", 0.0);
-    double d = SmartDashboard.getNumber("Kd", 0.0);
+    // double p = SmartDashboard.getNumber("Kp", 0.0);
+    // double i = SmartDashboard.getNumber("Ki", 0.0);
+    // double d = SmartDashboard.getNumber("Kd", 0.0);
 
-    Drive.getInstance().getLeftPID().setPID(p, i, d);
-    Drive.getInstance().getRightPID().setPID(p, i, d);
+    // Drive.getInstance().getLeftPID().setPID(p, i, d);
+    // Drive.getInstance().getRightPID().setPID(p, i, d);
   }
 
   /** This function is called once when the robot is disabled. */

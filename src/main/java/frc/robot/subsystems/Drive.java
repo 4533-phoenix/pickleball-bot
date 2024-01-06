@@ -102,7 +102,13 @@ public final class Drive extends SubsystemBase {
      * Constructs the drive subsystem instance.
      */
     private Drive() {
-        /**
+        /*
+         * Sets the right leader to be inverted in order to have
+         * it go in the correct direction.
+         */
+        rightLeader.setInverted(true);
+
+        /*
          * Sets the left and right encoders to convert position from motor
          * rotations to distance traveled by the wheel. This involves first
          * converting motor rotations to meters, and then dividing by the
@@ -159,23 +165,29 @@ public final class Drive extends SubsystemBase {
          * -1.0 to 1.0 factor of the left and right controller sticks, as well
          * as the velocity factor.
          */
-        double leftVelocity = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VELOCITY * velocityFactor;
-        double rightVelocity = RobotContainer.getController().getRightY() * DriveConstants.MAX_VELOCITY * velocityFactor;
+        // double leftVelocity = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VELOCITY * velocityFactor;
+        // double rightVelocity = RobotContainer.getController().getRightY() * DriveConstants.MAX_VELOCITY * velocityFactor;
+
+        double leftVoltage = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VOLTAGE * velocityFactor;
+        double rightVoltage = RobotContainer.getController().getRightY() * DriveConstants.MAX_VOLTAGE * velocityFactor;
 
         /*
          * Gets the current left and right velocities from the left and 
          * right encoders.
          */
-        double currentLeftVelocity = leftEncoder.getVelocity();
-        double currentRightVelocity = rightEncoder.getVelocity();
+        // double currentLeftVelocity = leftEncoder.getVelocity();
+        // double currentRightVelocity = rightEncoder.getVelocity();
 
         /*
          * Sets the voltage of the left and right leader motors to the sum
          * of the voltage calculated by the left and right feedforward
          * and PID controllers.
          */
-        leftLeader.setVoltage(leftFeedforward.calculate(leftVelocity) + leftPID.calculate(currentLeftVelocity, leftVelocity));
-        rightLeader.setVoltage(rightFeedforward.calculate(rightVelocity) + rightPID.calculate(currentRightVelocity, rightVelocity));
+        // leftLeader.setVoltage(leftFeedforward.calculate(leftVelocity) + leftPID.calculate(currentLeftVelocity, leftVelocity));
+        // rightLeader.setVoltage(rightFeedforward.calculate(rightVelocity) + rightPID.calculate(currentRightVelocity, rightVelocity));
+
+        leftLeader.setVoltage(leftVoltage);
+        rightLeader.setVoltage(rightVoltage);
     }
 
     /**
