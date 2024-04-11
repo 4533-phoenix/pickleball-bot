@@ -4,7 +4,7 @@ import frc.robot.Constants.ShooterConstants;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -82,6 +82,13 @@ public final class Shooter extends SubsystemBase {
      */
     public void stopFlywheel() {
         flywheelMotor.setVoltage(0.0);
+    }
+
+    /**
+     * Stops the flywheel motor.
+     */
+    public boolean isShooterReady() {
+        return flywheelMotor.getAbsoluteEncoder().getVelocity() >= (ShooterConstants.FLYWHEEL_VELOCITY - 1000);
     }
 
     /**

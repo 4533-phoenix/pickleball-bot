@@ -26,7 +26,7 @@ public final class Constants {
         public static final double KD = 1.0;
 
         // Math constants.
-        public static final double MAX_VELOCITY = 5.0; // m/s
+        public static final double MAX_VELOCITY = 2.5; // m/s
         public static final double MAX_VOLTAGE = 3.0; // v
         public static final double WHEEL_CIRCUMFERENCE = 0.31919; // m
         public static final double RPM_TO_METERS_PER_SECOND = WHEEL_CIRCUMFERENCE / 60.0;
@@ -41,6 +41,14 @@ public final class Constants {
         // Servo ids.
         public static final int PRELIMINARY_SERVO_ID = 0;
         public static final int FIRING_SERVO_ID = 1;
+
+        // Angle (in degrees) for the closed and open positions of the servos
+        public static final double CLOSED_ANGLE = 180.0;
+        public static final double SEMI_CLOSED_ANGLE = 145.0;
+        public static final double OPEN_ANGLE = 110.0;
+
+        // Delay (in s) between open/close operations
+        public static final double DROP_DELAY = 0.250;
     }
 
     /**
@@ -55,7 +63,15 @@ public final class Constants {
         public static final double KV = 0.12589 / 60.0; // kv is in rot/s, so divide by 60s to get from rpm to rot/s
 
         // Math constants.
-        public static final double FLYWHEEL_VELOCITY = 3500.0; // rpm
+        public static final double FLYWHEEL_VELOCITY = 4000.0; // rpm
+    }
+
+    
+    /**
+     * Contains the limelight constants.
+     */
+    public static final class LimelightConstants {
+        public static final String LIMELIGHT_NAME = "limelight";
     }
 
     /**

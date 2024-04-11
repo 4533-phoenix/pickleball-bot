@@ -26,65 +26,55 @@ import frc.robot.Constants.FeederConstants;
 public final class Feeder extends SubsystemBase {
     private static Feeder feeder = null;
 
-    // Angle (in degrees) for the closed and open positions of the servos
-    private final double closedAngle = 180.0;
-    private final double semiClosedAngle = 145.0;
-    private final double openAngle = 110.0;
-
-    // Delay (in ms) between open/close operations
-    private final int dropDelay = 1000;
-    
     // Initialize the servo objects
     private final Servo preliminaryServo = new Servo(FeederConstants.PRELIMINARY_SERVO_ID);
     private final Servo firingServo = new Servo(FeederConstants.FIRING_SERVO_ID);
 
-    public static Feeder getInstance()
-    {
-        if (feeder == null) 
-        {
+    public static Feeder getInstance() {
+        if (feeder == null) {
             feeder = new Feeder();
         }
 
         return feeder;
     }
 
-    private Feeder()
-    {
+    private Feeder() {
     }
 
-    public void normalFire()
-    {
-        this.setPreliminary(true);
-        Timer.delay(dropDelay * 0.001);
+    public void noFire() {
         this.setPreliminary(false);
-        this.setFiring(true);
-        Timer.delay(dropDelay * 0.001);
         this.setFiring(false);
     }
 
+    // public void normalFire() {
+    //     this.setPreliminary(true);
+    //     Timer.delay(FeederConstants.DROP_DELAY * 0.001);
+    //     this.setPreliminary(false);
+    //     this.setFiring(true);
+    //     Timer.delay(FeederConstants.DROP_DELAY * 0.001);
+    //     this.setFiring(false);
+    // }
+
     // Rapid fire!!1!1!
-    public void rapidFire()
-    {
+    public void rapidFire() {
         // Set both servos to the open position
         this.setFiring(true);
         this.setPreliminary(true);
     }
 
     // Open/close the preliminary servo
-    public void setPreliminary(boolean open)
-    {
+    public void setPreliminary(boolean open) {
         if (open)
-            this.preliminaryServo.setAngle(this.openAngle);
+            this.preliminaryServo.setAngle(FeederConstants.OPEN_ANGLE);
         else
-            this.preliminaryServo.setAngle(this.semiClosedAngle);
+            this.preliminaryServo.setAngle(FeederConstants.SEMI_CLOSED_ANGLE);
     }
 
     // Open/close the firing servo
-    public void setFiring(boolean open)
-    {
+    public void setFiring(boolean open) {
         if (open)
-            this.firingServo.setAngle(this.openAngle);
+            this.firingServo.setAngle(FeederConstants.OPEN_ANGLE);
         else
-            this.firingServo.setAngle(this.closedAngle);
+            this.firingServo.setAngle(FeederConstants.SEMI_CLOSED_ANGLE);
     }
 }

@@ -5,6 +5,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterCommands;
 import frc.robot.commands.FeederCommands;
+import frc.robot.commands.LimelightCommands;
 
 import java.util.AbstractMap;
 import java.util.Map;
@@ -92,12 +93,37 @@ public final class RobotContainer {
         runFlywheelBackward.onFalse(ShooterCommands.stopFlywheelCommand());
 
         // Registers the normal fire command to the back button.
-        JoystickButton normalFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_BACK);
-        normalFireBtn.onTrue(FeederCommands.normalFireCommand());
+        JoystickButton normalFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
+        normalFireBtn.whileTrue(FeederCommands.normalFireCommand());
+        normalFireBtn.onFalse(FeederCommands.stopFireCommand());
 
         // Registers the rapid fire command to the left bumper.
-        JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_LB);
-        rapidFireBtn.onTrue(FeederCommands.rapidFireCommand());
+        JoystickButton rapidFireBtn = new JoystickButton(controller, ControllerConstants.BUTTON_RB);
+        rapidFireBtn.whileTrue(FeederCommands.rapidFireCommand());
+        rapidFireBtn.onFalse(FeederCommands.stopFireCommand());
+
+        /*
+         * Create the run climb down button on the LB button
+         * of the manipulator controller.
+         */
+        JoystickButton runLimelightFlashButton = 
+            new JoystickButton(
+                controller, 
+                ControllerConstants.BUTTON_B);
+        
+        /*
+         * While the run climb down button is pressed,
+         * run the run climb down command.
+         */
+        runLimelightFlashButton.whileTrue(
+            LimelightCommands.getStartFlashLimelightCommand());
+
+        /*
+         * When the run climb down button is released,
+         * run the stop climb command.
+         */
+        runLimelightFlashButton.onFalse(
+            LimelightCommands.getStopFlashLimelightCommand());
     }
     
     /**
