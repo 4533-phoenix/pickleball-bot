@@ -168,8 +168,16 @@ public final class Drive extends SubsystemBase {
         // double leftVelocity = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VELOCITY * velocityFactor;
         // double rightVelocity = RobotContainer.getController().getRightY() * DriveConstants.MAX_VELOCITY * velocityFactor;
 
-        double leftVoltage = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VOLTAGE * velocityFactor;
-        double rightVoltage = RobotContainer.getController().getRightY() * DriveConstants.MAX_VOLTAGE * velocityFactor;
+        // double leftVoltage = RobotContainer.getController().getLeftY() * DriveConstants.MAX_VOLTAGE * velocityFactor;
+        // double rightVoltage = RobotContainer.getController().getRightY() * DriveConstants.MAX_VOLTAGE * velocityFactor;
+        double x = RobotContainer.getController().getLeftX();
+        double y = RobotContainer.getController().getLeftY();
+
+        double left = y - x;
+        double right = y + x;
+
+        double leftVoltage = left * DriveConstants.MAX_VOLTAGE * velocityFactor;
+        double rightVoltage = right * DriveConstants.MAX_VOLTAGE * velocityFactor;
 
         /*
          * Gets the current left and right velocities from the left and 

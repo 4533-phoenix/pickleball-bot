@@ -102,28 +102,25 @@ public final class RobotContainer {
         rapidFireBtn.whileTrue(FeederCommands.rapidFireCommand());
         rapidFireBtn.onFalse(FeederCommands.stopFireCommand());
 
-        /*
-         * Create the run climb down button on the LB button
-         * of the manipulator controller.
-         */
+        // Registers the limelight flash feature
         JoystickButton runLimelightFlashButton = 
             new JoystickButton(
                 controller, 
                 ControllerConstants.BUTTON_B);
-        
-        /*
-         * While the run climb down button is pressed,
-         * run the run climb down command.
-         */
         runLimelightFlashButton.whileTrue(
             LimelightCommands.getStartFlashLimelightCommand());
-
-        /*
-         * When the run climb down button is released,
-         * run the stop climb command.
-         */
         runLimelightFlashButton.onFalse(
             LimelightCommands.getStopFlashLimelightCommand());
+
+        // // Registers the auto aim feature
+        // JoystickButton runAutoAimButton = 
+        //     new JoystickButton(
+        //         controller, 
+        //         ControllerConstants.BUTTON_A);
+        // runLimelightFlashButton.whileTrue(
+        //     DriveCommands.getStartFlashLimelightCommand());
+        // runLimelightFlashButton.onFalse(
+        //     DriveCommands.getStopFlashLimelightCommand());
     }
     
     /**

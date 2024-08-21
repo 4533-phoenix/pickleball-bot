@@ -27,7 +27,7 @@ public final class Constants {
 
         // Math constants.
         public static final double MAX_VELOCITY = 2.5; // m/s
-        public static final double MAX_VOLTAGE = 3.0; // v
+        public static final double MAX_VOLTAGE = 6.0; // v
         public static final double WHEEL_CIRCUMFERENCE = 0.31919; // m
         public static final double RPM_TO_METERS_PER_SECOND = WHEEL_CIRCUMFERENCE / 60.0;
         public static final double GEAR_REDUCTION = 6.0;

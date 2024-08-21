@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
+import frc.robot.helpers.LimelightHelper;
 import frc.robot.subsystems.Drive;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -36,6 +38,15 @@ public final class DriveCommands {
             () -> Drive.getInstance().toggleSlowDriveMode(),
             Drive.getInstance()
         );
+    }
+
+    // public static FunctionalCommand autoAimCommand() {
+    //     return new FunctionalCommand(
+    //         () -> {}, 
+    //         () -> {}, 
+    //         () -> {}, 
+    //         () -> {}, 
+    //     Drive.getInstance());
     }
 }
 
