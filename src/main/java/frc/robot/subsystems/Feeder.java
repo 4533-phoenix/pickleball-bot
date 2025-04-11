@@ -1,80 +1,140 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FeederConstants;
 
-/*
-            The feeder
-    - ` , WITH RAPID FIRE ` , -
-
-    The feeder has a two-servo system.
-    
-    In normal mode:
-     1. The "preliminary" servo is set to the open position
-     2. A ball drops down to the second barrier
-     3. The "preliminary" servo is set to the closed position
-     4. The "firing" servo is set to the open position
-     5. The ball drops into the shooter
-     6. The "firing" servo is set to the closed position to
-        prepare for the next trigger
-    
-    In rapid fire mode, both servos are set to the open
-    position and all balls drop into the shooter.
-*/
+/** Contains the code for the feeder subsystem. */
 public final class Feeder extends SubsystemBase {
-    private static Feeder feeder = null;
+  /** The feeder subsystem instance. */
+  private static Feeder feeder = null;
 
-    // Initialize the servo objects
-    private final Servo preliminaryServo = new Servo(FeederConstants.PRELIMINARY_SERVO_ID);
-    private final Servo firingServo = new Servo(FeederConstants.FIRING_SERVO_ID);
+  /** Servo for preliminary feeding. */
+  private final Servo preliminaryServo = new Servo(FeederConstants.PRELIMINARY_SERVO_ID);
 
-    public static Feeder getInstance() {
-        if (feeder == null) {
-            feeder = new Feeder();
-        }
+  /** Servo for firing feeding. */
+  private final Servo firingServo = new Servo(FeederConstants.FIRING_SERVO_ID);
 
-        return feeder;
+  /**
+   * Gets the feeder subsystem instance.
+   *
+   * @return The feeder subsystem instance.
+   */
+  public static Feeder getInstance() {
+    /*
+     * Constructs the feeder subsystem instance if it
+     * has not already been constructed.
+     */
+    if (feeder == null) {
+      feeder = new Feeder();
     }
 
-    private Feeder() {
-    }
+    return feeder;
+  }
 
-    public void noFire() {
-        this.setPreliminary(false);
-        this.setFiring(false);
-    }
+  /** Constructs the feeder subsystem instance. */
+  private Feeder() {
+    setDefaultCommand(closeAll());
+  }
 
-    // public void normalFire() {
-    //     this.setPreliminary(true);
-    //     Timer.delay(FeederConstants.DROP_DELAY * 0.001);
-    //     this.setPreliminary(false);
-    //     this.setFiring(true);
-    //     Timer.delay(FeederConstants.DROP_DELAY * 0.001);
-    //     this.setFiring(false);
-    // }
+  /**
+   * Creates a command that closes both servos.
+   *
+   * @return A command that closes both servos.
+   */
+  public Command closeAll() {
+    return run(() -> {
+          setPreliminary(false);
+          setFiring(false);
+        })
+        .withName("Feeder-CloseAll");
+  }
 
-    // Rapid fire!!1!1!
-    public void rapidFire() {
-        // Set both servos to the open position
-        this.setFiring(true);
-        this.setPreliminary(true);
-    }
+  /**
+   * Creates a command that executes the rapid fire sequence.
+   *
+   * @return A command that executes the rapid fire sequence.
+   */
+  public Command rapidFire() {
+    return run(() -> {
+          setPreliminary(true);
+          setFiring(true);
+        })
+        .withName("Feeder-RapidFire");
+  }
 
-    // Open/close the preliminary servo
-    public void setPreliminary(boolean open) {
-        if (open)
-            this.preliminaryServo.setAngle(FeederConstants.OPEN_ANGLE);
-        else
-            this.preliminaryServo.setAngle(FeederConstants.SEMI_CLOSED_ANGLE);
-    }
+  /**
+   * Creates a command that opens only the preliminary servo.
+   *
+   * @return A command that opens only the preliminary servo.
+   */
+  public Command openPreliminaryOnly() {
+    return run(() -> {
+          setPreliminary(true);
+          setFiring(false);
+        })
+        .withName("Feeder-OpenPreliminaryOnly");
+  }
 
-    // Open/close the firing servo
-    public void setFiring(boolean open) {
-        if (open)
-            this.firingServo.setAngle(FeederConstants.OPEN_ANGLE);
-        else
-            this.firingServo.setAngle(FeederConstants.SEMI_CLOSED_ANGLE);
+  /**
+   * Creates a command that opens only the firing servo.
+   *
+   * @return A command that opens only the firing servo.
+   */
+  public Command openFiringOnly() {
+    return run(() -> {
+          setPreliminary(false);
+          setFiring(true);
+        })
+        .withName("Feeder-OpenFiringOnly");
+  }
+
+  /**
+   * Creates a command that executes a single feed cycle. Opens preliminary servo, waits for ball to
+   * drop, closes preliminary, opens firing, waits for ball to drop, then closes firing.
+   *
+   * @return A command that executes a single feed cycle.
+   */
+  public Command singleFeedCycle() {
+    return Commands.sequence(
+            runOnce(() -> setPreliminary(true)),
+            Commands.waitSeconds(FeederConstants.DROP_DELAY.in(Seconds)),
+            runOnce(() -> setPreliminary(false)),
+            Commands.waitSeconds(0.1),
+            runOnce(() -> setFiring(true)),
+            Commands.waitSeconds(FeederConstants.DROP_DELAY.in(Seconds)),
+            runOnce(() -> setFiring(false)))
+        .withName("Feeder-SingleFeedCycle");
+  }
+
+  /**
+   * Open/close the preliminary servo.
+   *
+   * @param open True to open the servo, false to close it
+   */
+  private void setPreliminary(boolean open) {
+    if (open) {
+      preliminaryServo.setAngle(FeederConstants.OPEN_ANGLE.in(Degrees));
+    } else {
+      preliminaryServo.setAngle(FeederConstants.SEMI_CLOSED_ANGLE.in(Degrees));
     }
+  }
+
+  /**
+   * Open/close the firing servo.
+   *
+   * @param open True to open the servo, false to close it
+   */
+  private void setFiring(boolean open) {
+    if (open) {
+      firingServo.setAngle(FeederConstants.OPEN_ANGLE.in(Degrees));
+    } else {
+      firingServo.setAngle(FeederConstants.SEMI_CLOSED_ANGLE.in(Degrees));
+    }
+  }
 }

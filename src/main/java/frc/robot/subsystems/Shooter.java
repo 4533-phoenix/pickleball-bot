@@ -1,100 +1,126 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ShooterConstants;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-/**
- * Contains the code for the shooter subsystem.
- */
+/** Contains the code for the shooter subsystem. */
 public final class Shooter extends SubsystemBase {
-    /**
-     * The shooter subsystem instance.
-     */
-    private static Shooter shooter = null;
+  /** The shooter subsystem instance. */
+  private static Shooter shooter = null;
 
-    /**
-     * The flywheel motor.
-     */
-    private final CANSparkMax flywheelMotor = new CANSparkMax(ShooterConstants.FLYWHEEL_MOTOR_ID, MotorType.kBrushless);
+  /** The flywheel motor. */
+  private final SparkMax flywheelMotor =
+      new SparkMax(ShooterConstants.FLYWHEEL_MOTOR_ID, MotorType.kBrushless);
 
-    /**
-     * The encoder for {@link #flywheelMotor}.
-     */
-    private final RelativeEncoder flywheelEncoder = flywheelMotor.getEncoder();
+  /** Trigger that is active when the shooter is up to speed. */
+  public final Trigger isReady =
+      new Trigger(
+          () ->
+              flywheelMotor.getEncoder().getVelocity()
+                  >= ShooterConstants.FLYWHEEL_VELOCITY.in(RotationsPerSecond)
+                      - RotationsPerSecond.of(100).in(RotationsPerSecond));
 
-    /**
-     * The feedforward controller for {@link #flywheelMotor}.
-     */
-    private final SimpleMotorFeedforward flywheelFeedforward = new SimpleMotorFeedforward(ShooterConstants.KS, ShooterConstants.KV);
+  /** Trigger that is active when the shooter is running. */
+  public final Trigger isRunning = new Trigger(() -> flywheelMotor.getEncoder().getVelocity() > 0);
 
-    /**
-     * Gets the shooter subsystem instance.
-     * 
-     * @return The shooter subsystem instance.
+  /**
+   * Gets the shooter subsystem instance.
+   *
+   * @return The shooter subsystem instance.
+   */
+  public static Shooter getInstance() {
+    /*
+     * Constructs the shooter subsystem instance if it
+     * has not already been constructed.
      */
-    public static Shooter getInstance() {
-        /*
-         * Constructs the shooter subsystem instance if it
-         * has not already been constructed.
-         */
-        if (shooter == null) {
-            shooter = new Shooter();
-        }
-
-        return shooter;
+    if (shooter == null) {
+      shooter = new Shooter();
     }
 
-    /**
-     * Constructs the shooter subsystem instance.
-     */
-    private Shooter() {
-        flywheelMotor.setInverted(true);
+    return shooter;
+  }
 
-        flywheelEncoder.setPositionConversionFactor(1.0);
-        flywheelEncoder.setVelocityConversionFactor(1.0);
-    }
+  /** Constructs the shooter subsystem instance. */
+  private Shooter() {
+    SparkMaxConfig flywheelConfig = new SparkMaxConfig();
+    flywheelConfig.idleMode(IdleMode.kCoast);
+    flywheelConfig.inverted(true);
+    flywheelConfig.openLoopRampRate(0.2);
+    flywheelConfig.closedLoopRampRate(0.2);
+    flywheelConfig.smartCurrentLimit(30);
 
-    /**
-     * Sets the flywheel motor to run forward at the
-     * flywheel velocity.
-     */
-    public void runFlywheelForward() {
-        flywheelMotor.setVoltage(flywheelFeedforward.calculate(ShooterConstants.FLYWHEEL_VELOCITY));
-    }
+    // Configure encoder
+    EncoderConfig encoderConfig = new EncoderConfig();
+    encoderConfig.positionConversionFactor(1.0);
+    encoderConfig.velocityConversionFactor(1.0);
+    flywheelConfig.apply(encoderConfig);
 
-    /**
-     * Sets the flywheel motor to run backward at the
-     * flywheel velocity.
-     */
-    public void runFlywheelBackward() {
-        flywheelMotor.setVoltage(flywheelFeedforward.calculate(-ShooterConstants.FLYWHEEL_VELOCITY));
-    }
+    // Configure PID controller
+    ClosedLoopConfig pidConfig = new ClosedLoopConfig();
+    ShooterConstants.PID.applyToConfig(pidConfig);
+    flywheelConfig.apply(pidConfig);
 
-    /**
-     * Stops the flywheel motor.
-     */
-    public void stopFlywheel() {
-        flywheelMotor.setVoltage(0.0);
-    }
+    flywheelMotor.configure(
+        flywheelConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
-    /**
-     * Stops the flywheel motor.
-     */
-    public boolean isShooterReady() {
-        return flywheelMotor.getAbsoluteEncoder().getVelocity() >= (ShooterConstants.FLYWHEEL_VELOCITY - 1000);
-    }
+    // Set default command to stop the flywheel when no other command is running
+    setDefaultCommand(stop());
+  }
 
-    /**
-     * The {@link CommandScheduler} runs this method
-     * every 20 ms.
-     */
-    @Override
-    public void periodic() {}
+  /**
+   * Creates a command that runs the flywheel forward at the preset velocity.
+   *
+   * @return A command that runs the flywheel forward.
+   */
+  public Command runForward() {
+    return run(() ->
+            flywheelMotor
+                .getClosedLoopController()
+                .setReference(ShooterConstants.FLYWHEEL_VELOCITY.in(RotationsPerSecond), ControlType.kVelocity))
+        .withName("Shooter-RunForward");
+  }
+
+  /**
+   * Creates a command that stops the flywheel.
+   *
+   * @return A command that stops the flywheel.
+   */
+  public Command stop() {
+    return run(() -> flywheelMotor.getClosedLoopController().setReference(0, ControlType.kVelocity))
+        .withName("Shooter-Stop");
+  }
+
+  /**
+   * Creates a command that instantly stops the flywheel (one-time execution).
+   *
+   * @return A command that stops the flywheel.
+   */
+  public Command instantStop() {
+    return runOnce(
+            () -> flywheelMotor.getClosedLoopController().setReference(0, ControlType.kVelocity))
+        .withName("Shooter-InstantStop");
+  }
+
+  /**
+   * Creates a command that waits until the shooter is up to speed.
+   *
+   * @return A command that waits until the shooter is ready.
+   */
+  public Command waitUntilReady() {
+    return Commands.waitUntil(isReady).withName("Shooter-WaitUntilReady");
+  }
 }

@@ -4,13 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Drive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,52 +15,11 @@ import frc.robot.subsystems.Drive;
  */
 public final class Robot extends TimedRobot {
   /**
-   * The key for the selected autonomous command.
-   */
-  private String autoSelected = "Default Auto";
-
-  /**
-   * The selected autonomous command.
-   */
-  private Command autoCommand = null;
-
-  /**
-   * The initial position of the selected autonomous
-   * command.
-   */
-  private Pose2d autoPosition = null;
-  
-  /**
-   * The autonomous chooser for the autonomous commands.
-   */
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
-
-  /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
-  public void robotInit() {
-    // Resets the yaw of the gyro to zero.
-    Drive.getInstance().resetGyro();
-
-    // Registers the subsystems with the command scheduler.
-    RobotContainer.registerSubsystems();
-
-    // Registers the button commands with their respective buttons.
-    RobotContainer.registerButtons();
-
-    // Sets the options and default option for the autonomous chooser.
-    autoChooser.setDefaultOption("Default Auto", "Default Auto");
-    autoChooser.addOption("First Auto", "First Auto");
-
-    // Sends the autonomous chooser to SmartDashboard.
-    SmartDashboard.putData("Auto Commands", autoChooser);
-
-    SmartDashboard.putNumber("Kp", 0.0);
-    SmartDashboard.putNumber("Ki", 0.0);
-    SmartDashboard.putNumber("Kd", 0.0);
-  }
+  public void robotInit() {}
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -91,34 +45,7 @@ public final class Robot extends TimedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {
-    /*
-     * Gets the key for the autonomous command selected from the 
-     * autonomous chooser in SmartDashboard.
-     */
-    autoSelected = autoChooser.getSelected();
-
-    /*
-     * Gets the selected autonomous command using the key retrieved
-     * from the autonomous chooser.
-     */
-    autoCommand = RobotContainer.getAutoCommand(autoSelected);
-
-    /*
-     * Gets the initial position of the selected autonomous command
-     * using the key retrieved from the autonomous chooser.
-     */
-    autoPosition = RobotContainer.getAutoPosition(autoSelected);
-
-    /*
-     * Registers the drive position estimator using the initial
-     * position of the selected autonomous command.
-     */
-    Drive.getInstance().registerPoseEstimator(autoPosition);
-    
-    // Schedules the selected autonomous command.
-    CommandScheduler.getInstance().schedule(autoCommand);
-  }
+  public void autonomousInit() {}
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -126,27 +53,11 @@ public final class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    /*
-     * Cancels the selected autonomous command at the start
-     * of teleop. This ensures that the autonomous command
-     * stops if it continues running in teleop.
-     */
-    if (autoCommand != null) {
-      CommandScheduler.getInstance().cancel(autoCommand);
-    }
-  }
+  public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    // double p = SmartDashboard.getNumber("Kp", 0.0);
-    // double i = SmartDashboard.getNumber("Ki", 0.0);
-    // double d = SmartDashboard.getNumber("Kd", 0.0);
-
-    // Drive.getInstance().getLeftPID().setPID(p, i, d);
-    // Drive.getInstance().getRightPID().setPID(p, i, d);
-  }
+  public void teleopPeriodic() {}
 
   /** This function is called once when the robot is disabled. */
   @Override
