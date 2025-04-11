@@ -114,6 +114,14 @@ public final class Drive extends SubsystemBase {
     SmartDashboard.putData("Field", field);
   }
 
+  /**
+   * Creates a command to drive the robot using joystick inputs.
+   * 
+   * @param x The X-axis (turning) input from -1.0 to 1.0
+   * @param y The Y-axis (forward/reverse) input from -1.0 to 1.0
+   * @param slowDrive True enables slow mode, false enables fast mode
+   * @return Command for driving with joystick control
+   */
   public Command getDriveCommand(DoubleSupplier x, DoubleSupplier y, BooleanSupplier slowDrive) {
     return run(
         () -> {
@@ -179,6 +187,7 @@ public final class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // Periodic method for the drive subsystem.
     // Update the pose estimator with the latest encoder and gyro readings
     poseEstimator.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
