@@ -1,1 +1,1 @@
-Updated rewrite --> [pickleball-bot-v2](https://github.com)
+Updated rewrite --> [pickleball-bot-v2](https://github.com/4533-phoenix/pickleball-bot-v2)
